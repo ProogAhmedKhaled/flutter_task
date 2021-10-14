@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_task/view/contact/component.dart';
+import 'package:flutter_task/view/shared/component.dart';
 import 'package:flutter_task/view/shared/styles/colors.dart';
 import 'package:flutter_task/view_model/nav_bar_cubit/nav_bar_cubit_logic.dart';
 import 'package:flutter_task/view_model/nav_bar_cubit/nav_bar_state.dart';
-
-class NavBarContainer extends StatelessWidget {
+import 'package:get/get.dart';
+class NavBarContainer extends StatefulWidget {
   const NavBarContainer({Key? key}) : super(key: key);
 
+  @override
+  _NavBarContainerState createState() => _NavBarContainerState();
+}
+
+class _NavBarContainerState extends State<NavBarContainer> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -32,7 +37,7 @@ class NavBarContainer extends StatelessWidget {
               },
               items: [
                 BottomNavigationBarItem(
-                    label: "الرئيسية",
+                    label: "home".tr,
                     icon: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5),
                       child: ImageIcon(
@@ -40,7 +45,7 @@ class NavBarContainer extends StatelessWidget {
                       ),
                     )),
                 BottomNavigationBarItem(
-                    label: "جدول الدوري",
+                    label: "league".tr,
                     icon: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5.0),
                       child: ImageIcon(
@@ -48,7 +53,7 @@ class NavBarContainer extends StatelessWidget {
                       ),
                     )),
                 BottomNavigationBarItem(
-                    label: "المركز الاعلامي",
+                    label: "media".tr,
                     icon: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5.0),
                       child: ImageIcon(
@@ -58,7 +63,7 @@ class NavBarContainer extends StatelessWidget {
                       ),
                     )),
                 BottomNavigationBarItem(
-                    label: "احصائيات كاملة",
+                    label: "statics".tr,
                     icon: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5.0),
                       child: ImageIcon(
@@ -68,7 +73,7 @@ class NavBarContainer extends StatelessWidget {
                       ),
                     )),
                 BottomNavigationBarItem(
-                    label: "المزيد",
+                    label: "more".tr,
                     icon: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5.0),
                       child: ImageIcon(

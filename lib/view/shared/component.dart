@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_task/view/shared/styles/colors.dart';
+import 'package:get/get.dart';
 
 AppBar defaultAppBar() => AppBar(
-  title: Image.asset(
-    "assets/images/logo.png",
-  ),
-  centerTitle: true,
-  backgroundColor: bgPrimary,
-  elevation: 0,
-);
+      title: Image.asset(
+        "assets/images/logo.png",
+      ),
+      centerTitle: true,
+      backgroundColor: bgPrimary,
+      elevation: 0,
+    );
 
 Widget defaultTextField({
   required TextEditingController controller,
@@ -17,10 +18,10 @@ Widget defaultTextField({
   String? hint,
   int lines = 1,
   TextInputType? inputType,
-   String? Function(String?)? validate,
+  String? Function(String?)? validate,
 }) =>
     Container(
-      margin:const EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.symmetric(vertical: 10),
       child: TextFormField(
         controller: controller,
         validator: validate,
@@ -29,7 +30,7 @@ Widget defaultTextField({
         maxLines: lines,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.all(10),
-          hintText: hint,
+          hintText: hint!.tr,
           hintStyle: TextStyle(color: bgBlend2),
           prefixIcon: prefix,
           suffixIcon: suffix,
@@ -92,11 +93,49 @@ Widget defaultButton({
                 bottomLeft: Radius.circular(radBottomLeft)),
           ),
           child: Text(
-            text,
+            text.tr,
             style: TextStyle(
-              fontSize: textSize,
-              fontWeight: textWeight,
-              color: textColor
-            ),
+                fontSize: textSize, fontWeight: textWeight, color: textColor),
           )),
+    );
+
+Text customText(
+        {required String title,
+        int maxLines = 1,
+        double fontSize = 12,
+        FontWeight weight = FontWeight.normal,
+        Color fontColor = bgDark,
+        TextAlign textAlign = TextAlign.start
+        }) =>
+    Text(
+      title.tr,
+      textAlign: textAlign,
+      maxLines: maxLines,
+      overflow: TextOverflow.ellipsis,
+      style: TextStyle(
+        fontSize: fontSize,
+        fontWeight: weight,
+        color: fontColor,
+      ),
+    );
+
+Widget buildImageContainer(
+        {required double width,
+        required double height,
+        required String imgUrl}) =>
+    Container(
+      width: width,
+      height: height,
+      alignment: Alignment.bottomRight,
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        image: imgUrl.contains("http")
+            ? DecorationImage(image: NetworkImage(imgUrl,),fit: BoxFit.fill)
+            : DecorationImage(image: AssetImage(imgUrl),fit: BoxFit.fill),
+      ),
+      child: Image.asset(
+        "assets/images/stack.png",
+        width: 50,
+      ),
     );

@@ -1,0 +1,60 @@
+const Map<String, String> ar = {
+  // Bottom Nav Bar
+  "home" : 'الرئيسية',
+  "league" : 'جدول الدوري',
+  "media" : 'المركز الاعلامي',
+  "news" : 'الأخبار',
+  "images" : 'الصور',
+  "videos" : 'الفيديوهات',
+  'sports_league':'الدوري الرياضي',
+  "statics" : 'إحصائيات كاملة',
+  "more" : 'المزيد',
+
+  // Setting List
+  "club_directory" : 'دليل النوادي',
+  "stadium_guide" : 'دليل الملاعب',
+  "about": "من نحن",
+  "contact": "إتصل بنا",
+  "contactus": "تواصل معنا",
+  "regulation" : 'الأنظمة واللوائح',
+  "committees" : 'اللجان',
+  "share" : 'شارك التطبيق',
+  "share_news" : 'الاشتراك بالنشرة الإخبارية',
+  "language": "اللغة",
+  "arabic": "العربية",
+  "english": "الانجليزية",
+  "description": "الوصف",
+  // Contact Form
+  "next": "التالي",
+  "send": "إرسال",
+  "phone": "رقم الجوال",
+  "firstName": "الإسم الأول",
+  "secondName": "الإسم الثاني",
+  "email": "البريد الإلكتروني",
+  "messageTitle": "عنوان الرسالة",
+  "messageType": "نوع الرسالة",
+  "messageContent": "محتوي الرسالة",
+  "attachment": "ارفق صوره (اختياري)",
+  "sendMessage": "تم إرسال الطلب بنجاح",
+  "orderNumber": "رقم الطلب",
+  "expectWinner": "توقع من الفائز",
+  "lastTweet": "آخر التغريدات",
+  "lastNews": "آخر الأخبار",
+  "nextMatch": "المباريات القادمة",
+
+  // Error Message
+  'fNameError' :'من فضلك ادخل الاسم الأول',
+  'sNameError' :'من فضلك ادخل الاسم الثاني',
+  'messageError' :'هذا الحقل يجب  ان يتعدي ال 3 أحرف',
+  'emailValidError' :'من فضلك ادخل بريد إلكتروني صالح',
+  'emailError' :'من فضلك ادخل البريد الإلكتروني',
+  'phoneError' :'من فضلك ادخل رقم الجوال',
+  'phoneValidError' :'  (05 + عشر أرقام) ادخل رقم جوال صحيح',
+  'messageTitleError' :'من فضلك ادخل  عنوان الرسالة',
+  'messageTypeError' :'من فضلك ادخل نوع الرسالة',
+  'messageContentError' :'من فضلك ادخل محتوي الرسالة',
+  'messageContentValidationError' :'من فضل ادخل عدد أحرف لا يقل عن 10 حرف',
+
+  // Success Message
+  'attachmentDone' : 'تم إختيار الصورة بنجاح'
+};

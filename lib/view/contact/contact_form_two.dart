@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_task/model/beans/contact_bean/contact_bean.dart';
+import 'package:flutter_task/model/cach_helper/cach_helper.dart';
 import 'package:flutter_task/view/contact/success_send_screen.dart';
 import 'package:flutter_task/view/shared/styles/colors.dart';
-import 'package:flutter_task/view_model/setting_cubit/setting_cubit_logic.dart';
-import 'package:flutter_task/view_model/setting_cubit/setting_state.dart';
+import 'package:flutter_task/view_model/setting_cubit/contact_cubit_logic.dart';
+import 'package:flutter_task/view_model/setting_cubit/contact_state.dart';
 import 'package:get/get.dart';
 
-import 'component.dart';
+import '../shared/component.dart';
 
 class ContactFormTwo extends StatefulWidget {
-  const ContactFormTwo({Key? key}) : super(key: key);
+  final ContactBean contactBean;
+
+  const ContactFormTwo({Key? key, required this.contactBean}) : super(key: key);
 
   @override
   _ContactFormTwoState createState() => _ContactFormTwoState();
@@ -21,20 +25,23 @@ class _ContactFormTwoState extends State<ContactFormTwo> {
 
   var formKey = GlobalKey<FormState>();
 
-  String hintText = "نوع الرسالة";
+  String hintText = "messageType";
   String messageType = "";
   List<String> options = [" الاول", "الثاني", "الثالث", "الرابع"];
 
   @override
   Widget build(BuildContext context) {
+    ContactBean contactBean = widget.contactBean;
     return BlocProvider(
-      create: (context) => SettingCubit(),
-      child: BlocConsumer<SettingCubit, SettingState>(
+      create: (context) => ContactCubit(),
+      child: BlocConsumer<ContactCubit, ContactState>(
         listener: (context, state) {},
         builder: (context, state) {
-          SettingCubit cubit = SettingCubit.get(context);
+          ContactCubit cubit = ContactCubit.get(context);
           return Directionality(
-            textDirection: TextDirection.rtl,
+            textDirection: CachHelper.get(key: 'lang') == 'ar'
+                ? TextDirection.rtl
+                : TextDirection.ltr,
             child: Scaffold(
               appBar: PreferredSize(
                   preferredSize: Size.fromHeight(80.0),
@@ -50,7 +57,7 @@ class _ContactFormTwoState extends State<ContactFormTwo> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "تواصل معنا",
+                        "contactus".tr,
                         style: TextStyle(fontSize: 22, color: bgPrimary),
                       ),
                       Form(
@@ -59,22 +66,28 @@ class _ContactFormTwoState extends State<ContactFormTwo> {
                           children: [
                             defaultTextField(
                                 controller: messageTitle,
-                                hint: "عنوان الرسالة",
+                                hint: "messageTitle",
                                 validate: (value) {
                                   if (value!.isEmpty) {
-                                    return "من فضلك ادخل عنوان الرسالة";
+                                    return "messageTitleError".tr;
+                                  }
+                                  if (value.length < 3) {
+                                    return "messageError".tr;
                                   }
                                 }),
                             Container(
                               padding: EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 15),
+                                  vertical: 5, horizontal: 10),
                               decoration: BoxDecoration(
                                   border: Border.all(color: bgPrimary),
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(5))),
                               child: DropdownButtonFormField<String>(
+                                validator: (value) {
+                                  if (value!.isEmpty) return "messageType".tr;
+                                },
                                 decoration: InputDecoration.collapsed(
-                                    hintText: hintText),
+                                    hintText: hintText.tr),
                                 isExpanded: true,
                                 icon: Icon(
                                   Icons.keyboard_arrow_down_sharp,
@@ -97,16 +110,17 @@ class _ContactFormTwoState extends State<ContactFormTwo> {
                             ),
                             defaultTextField(
                                 controller: messageContent,
-                                hint: "محتوي الرسالة",
+                                hint: "messageContent",
                                 lines: 5,
                                 inputType: TextInputType.emailAddress,
                                 validate: (value) {
                                   if (value!.isEmpty) {
-                                    return "من فضلك ادخل محتوي الرسالة";
+                                    return "messageContentError".tr;
                                   }
-                                  if (value.length < 20) {
-                                    return "من فضل ادخل عدد أحرف لا يقل عن 20 حرف";
+                                  if (value.length < 10) {
+                                    return "messageContentValidationError".tr;
                                   }
+
                                 }),
                             Container(
                               padding: const EdgeInsets.symmetric(
@@ -120,19 +134,21 @@ class _ContactFormTwoState extends State<ContactFormTwo> {
                                 children: [
                                   state is! SettingImageSuccessLoadState
                                       ? Text(
-                                          "ارفق صورة (اختياري)",
+                                          "attachment".tr,
                                           style: TextStyle(
                                               color: bgBlend2, fontSize: 16),
                                         )
                                       : Text(
-                                          "تم اختيار الصورة بنجاح",
+                                          "attachmentDone".tr,
                                           style: TextStyle(
                                               color: Colors.green,
                                               fontSize: 16),
                                         ),
                                   IconButton(
                                       onPressed: () {
-                                        cubit.uploadImage();
+                                        cubit.uploadImage().then((value) {
+                                          cubit.convertImageToBase64();
+                                        });
                                       },
                                       icon: Icon(
                                         Icons.camera_alt_outlined,
@@ -160,11 +176,20 @@ class _ContactFormTwoState extends State<ContactFormTwo> {
                               backgroundColor: Colors.red.shade300,
                             );
                           }
+
                           if (formKey.currentState!.validate()) {
-                            Get.offAll(SucessMessage());
+                            contactBean.messageTitle = messageTitle.text;
+                            contactBean.messageType = messageType;
+                            contactBean.messageDesc = messageContent.text;
+                             contactBean.attachment = cubit.imageBase64;
+                            print(contactBean.toJson());
+                            cubit.postMessage(contactBean).then((value) {
+                              print("done sending" + value.toString());
+                              Get.offAll(SuccessMessage(responseId: value,));
+                            });
                           }
                         },
-                        text: "إرسال",
+                        text: "send",
                       )
                     ],
                   ),

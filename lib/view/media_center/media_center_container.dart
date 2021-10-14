@@ -3,7 +3,7 @@ import 'package:flutter_task/view/media_center/images.dart';
 import 'package:flutter_task/view/media_center/news.dart';
 import 'package:flutter_task/view/media_center/videos.dart';
 import 'package:flutter_task/view/shared/styles/colors.dart';
-
+import 'package:get/get.dart';
 class MediaCenter extends StatefulWidget {
   const MediaCenter({Key? key}) : super(key: key);
 
@@ -39,9 +39,9 @@ class _MediaCenterState extends State<MediaCenter> {
 
                 indicatorColor: bgWhite,
                 tabs: [
-                Tab(text: "الأخبار",),
-                Tab(text: "الصور",),
-                Tab(text: "الفيديوهات",),
+                Tab(text: "news".tr,),
+                Tab(text: "images".tr,),
+                Tab(text: "videos".tr,),
               ],),
             )),
         body: TabBarView(

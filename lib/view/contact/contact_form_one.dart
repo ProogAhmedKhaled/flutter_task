@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_task/model/beans/contact_bean/contact_bean.dart';
+import 'package:flutter_task/model/cach_helper/cach_helper.dart';
 import 'package:flutter_task/view/contact/contact_form_two.dart';
 import 'package:flutter_task/view/shared/styles/colors.dart';
 import 'package:get/get.dart';
 
-import 'component.dart';
+import '../shared/component.dart';
 
 class ContactFormOne extends StatefulWidget {
   const ContactFormOne({Key? key}) : super(key: key);
@@ -17,7 +19,8 @@ class _ContactFormOneState extends State<ContactFormOne> {
   TextEditingController secondName = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController phone = TextEditingController();
-  final RegExp phoneRegExp = RegExp('(01)[0125][0-9]{8}');
+  final RegExp phoneRegExp = RegExp('(05)[0-9]{10}');
+  final RegExp emailRegExp = RegExp("^[a-zA-Z0-9.a-zA-Z0-9.!#\$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 
   // for egyption must start with 01 and third number may be 0 or 1 or 2 or 5 and 8 number last
 
@@ -26,7 +29,7 @@ class _ContactFormOneState extends State<ContactFormOne> {
   @override
   Widget build(BuildContext context) {
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: CachHelper.get(key: 'lang') =='ar' ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         appBar: PreferredSize(
             preferredSize: Size.fromHeight(80.0), // here the desired height
@@ -39,7 +42,7 @@ class _ContactFormOneState extends State<ContactFormOne> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "تواصل معنا",
+                  "contactus".tr,
                   style: TextStyle(fontSize: 22, color: bgPrimary),
                 ),
                 Form(
@@ -48,39 +51,48 @@ class _ContactFormOneState extends State<ContactFormOne> {
                     children: [
                       defaultTextField(
                           controller: firstName,
-                          hint: "الاسم الأول",
+                          hint: "firstName",
                           validate: (value) {
                             if (value!.isEmpty) {
-                              return "من فضلك ادخل الاسم الأول";
+                              return "fNameError".tr;
+                            }
+                            if (value.length < 3) {
+                              return "messageError".tr;
                             }
                           }),
                       defaultTextField(
                           controller: secondName,
-                          hint: "الاسم الثاني",
+                          hint: "secondName",
                           validate: (value) {
                             if (value!.isEmpty) {
-                              return "من فضلك ادخل الاسم الثاني";
+                              return "sNameError".tr;
+                            }
+                            if (value.length < 3) {
+                              return "messageError".tr;
                             }
                           }),
                       defaultTextField(
                           controller: email,
-                          hint: "البريد الالكتروني",
+                          hint: "email",
                           inputType: TextInputType.emailAddress,
                           validate: (value) {
                             if (value!.isEmpty) {
-                              return "من فضلك ادخل البريد الالكتروني";
+                              return "emailError".tr;
+                            }
+                            if (!emailRegExp.hasMatch(value)) {
+                              return "emailValidError".tr;
                             }
                           }),
                       defaultTextField(
                           controller: phone,
-                          hint: "رقم الجوال",
+                          hint: "phone",
                           inputType: TextInputType.phone,
                           validate: (value) {
                             if (value!.isEmpty) {
-                              return "من فضلك ادخل رقم الجوال";
+                              return "phoneError".tr;
                             }
                             if (!phoneRegExp.hasMatch(value)) {
-                              return "من فضلك ادخل رقم جوال صحيح";
+                              return "phoneValidError".tr;
                             }
                           }),
                       SizedBox(
@@ -89,10 +101,17 @@ class _ContactFormOneState extends State<ContactFormOne> {
                       defaultButton(
                         onTap: () {
                           if (formKey.currentState!.validate()) {
-                            Get.to(ContactFormTwo());
+                            ContactBean contactBean = ContactBean();
+                            contactBean.firstName = firstName.text;
+                            contactBean.lastName = secondName.text;
+                            contactBean.email = email.text;
+                            contactBean.mobile = phone.text;
+                            Get.to(ContactFormTwo(
+                              contactBean: contactBean,
+                            ));
                           }
                         },
-                        text: "التالي",
+                        text: "next",
                       )
                     ],
                   ),
